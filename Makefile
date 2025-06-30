@@ -1,22 +1,23 @@
 .PHONY: all clean run archive
 
-SRCS     := tests/ptlog.cpp src/ptlog.cpp
+SRCS     := tests/per-thread-log.cpp src/per-thread-log.cpp
 OBJS     := $(patsubst %.cpp,BUILD/%.o,$(SRCS))
 CXXFLAGS := -I inc -pthread -W -Wall -pedantic -O3
 LDFLAGS  := -pthread
 
-all: BUILD/ptlog.x
+all: BUILD/per-thread-log.x
 
 clean:
-	rm -fr BUILD
+	rm -fr BUILD /tmp/per-thread-log.x
 
-run: BUILD/ptlog.x
-	BUILD/ptlog.x
+run: BUILD/per-thread-log.x
+	BUILD/per-thread-log.x
+	cat /tmp/per-thread-log.x/*.log | sort > BUILD/merged.log
 
 archive:
-	zip -r ../per_thread_log.zip *
+	zip -r ../per-thread-log.zip *
 
-BUILD/ptlog.x: $(OBJS)
+BUILD/per-thread-log.x: $(OBJS)
 	$(CXX) -o $@ $(OBJS) $(LDFLAGS)
 
 BUILD/%.o: %.cpp
